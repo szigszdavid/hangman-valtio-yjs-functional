@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import CreateRoomView from "./CreateRoomView";
 import React from "react";
-import { state, initStore, addClient } from "../state/store";
+import { configuration, initStore, addClient } from "../state/configuration";
 import { Doc } from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import { bind } from "valtio-yjs";
@@ -17,7 +17,7 @@ const waitForSync = (websocketProvider) =>
       }
     });
   });
-const createSyncedStore = async (room, state) => {
+const createSyncedStore = async (room, configuration, game) => {
   try {
     const ydoc = new Doc();
     const websocketProvider = new WebsocketProvider(
@@ -26,8 +26,10 @@ const createSyncedStore = async (room, state) => {
       ydoc
     );
     await waitForSync(websocketProvider);
-    const yStore = ydoc.getMap("store");
-    bind(state, yStore);
+    const yConfiguration = ydoc.getMap("configuration");
+    const yGame = ydoc.getMap("game")
+    bind(configuration, yConfiguration);
+    bind(game, yGame)
     return { clientId: ydoc.clientID };
   } catch (e) {
     console.error(e);
@@ -38,16 +40,15 @@ export default function MultiplayerComponentFunctional(props) {
   const [roomId, setRoomId] = useState(null);
   const [clientId, setClientId] = useState(null);
 
-  const snapshot = useSnapshot(state);
-  const synced = Object.keys(snapshot).length !== 0 ? snapshot.configuration.synced : false;
+  const snapshot = useSnapshot(configuration);
+  const synced = Object.keys(snapshot).length !== 0 ? snapshot.synced : false;
 
   const handleCreate = async (id) => {
-    let result = await createSyncedStore(id, state);
+    let result = await createSyncedStore(id, configuration, props.gameProxy);
     setRoomId(id);
     const clientId = result.clientId;
 
-    if (state.configuration === undefined || state.configuration.clients === undefined) {
-      console.log("hello");
+    if (configuration.clients === undefined) {
       setClientId(clientId);
       initStore()
       addClient(clientId);
@@ -59,14 +60,14 @@ export default function MultiplayerComponentFunctional(props) {
   };
 
   const handleJoin = async (id) => {
-    let result = await createSyncedStore(id, state);
+    let result = await createSyncedStore(id, configuration, props.gameProxy);
     setRoomId(id);
     const clientId = result.clientId;
 
-    if (state.configuration !== undefined && state.configuration.clients !== undefined) {
+    if (configuration.clients !== undefined) {
       setClientId(clientId);
       addClient(clientId);
-    } else if (state.configuration === undefined || state.configuration.clients === undefined) {
+    } else if (configuration.clients === undefined) {
         alert(
           "This room is not created yet! If you click on CREATE NEW ROOM you will create it."
         );
