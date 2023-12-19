@@ -5,6 +5,7 @@ import Hangman from "./components/Hangman";
 import MistakeCounter from "./components/MistakeCounter"
 import { useSnapshot } from "valtio";
 import { game, newGame, guess } from "./state/game";
+import { isCurrentPlayer, nextPlayer } from "./state/rounds";
 
 export default function HangmanGame() {
   
@@ -15,7 +16,11 @@ export default function HangmanGame() {
   };
 
   const handleLetterButtonOnClick = (e) => {
-    guess(e);
+    if (isCurrentPlayer()) {
+      guess(e);
+
+      nextPlayer()
+    }
   };
 
   return (
