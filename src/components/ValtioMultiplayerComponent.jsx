@@ -43,7 +43,7 @@ const createSyncedStore = async (room, configuration, game, rounds) => {
   }
 };
 
-export default function MultiplayerComponentFunctional(props) {
+export default function ValtioMultiplayerComponent(props) {
   const [roomId, setRoomId] = useState(null);
   const [clientId, setClientId] = useState(null);
 

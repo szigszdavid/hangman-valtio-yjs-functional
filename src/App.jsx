@@ -1,13 +1,13 @@
 import HangmanGame from "./HangmanGame";
-import MultiplayerComponentFunctional from "./components/MultiplayerComponentFunctional";
+import ValtioMultiplayerComponent from "./components/ValtioMultiplayerComponent";
 import { game } from "./state/game";
 import { rounds } from "./state/rounds";
 
 const App = () => {
   return (
-    <MultiplayerComponentFunctional gameProxy={game} roundProxy={rounds}>
+    <ValtioMultiplayerComponent gameProxy={game} roundProxy={rounds}>
       <HangmanGame />
-    </MultiplayerComponentFunctional>
+    </ValtioMultiplayerComponent>
   );
 };
 

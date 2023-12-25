@@ -12,7 +12,7 @@ export function addEveryPlayer(playerData) {
     addPlayer(client.id, playerData);
   }
 
-  setCurrentPlayerIndex(Math.floor((Math.random() * rounds.players.length) + 1));
+  setCurrentPlayerIndex(Math.floor(Math.random() * rounds.players.length));
 }
 
 export function addPlayer(clientId, playerData) {
