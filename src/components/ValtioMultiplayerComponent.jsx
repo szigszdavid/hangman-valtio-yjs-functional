@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CreateRoomView from "./CreateRoomView";
 import React from "react";
 import { configuration, initStore, addClient } from "../state/configuration";
@@ -36,7 +36,6 @@ const createSyncedStore = async (room, configuration, game, rounds) => {
       const yRounds = ydoc.getMap("rounds");
       bind(rounds, yRounds);
     }
-    console.log(ydoc);
     return { clientId: ydoc.clientID };
   } catch (e) {
     console.error(e);
@@ -107,12 +106,6 @@ export default function ValtioMultiplayerComponent(props) {
     }
   };
 
-  useEffect(() => {
-    if (clientId && synced) {
-      addClient(clientId);
-    }
-  }, [synced, clientId]);
-
   return (
     <>
       {roomId === null ? (
@@ -122,7 +115,7 @@ export default function ValtioMultiplayerComponent(props) {
         />
       ) : (
         <>
-          <h1>{clientId}</h1>
+          <h1>ClientId: {clientId}</h1>
           <QuitButton quitGame={handleQuitGame} />
           {React.Children.map(props.children, (child) =>
             React.cloneElement(child, child.props)

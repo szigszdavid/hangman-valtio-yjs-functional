@@ -26,7 +26,6 @@ export default function HangmanGame() {
   return (
     <>
       <h1>Hangman</h1>
-      { JSON.stringify(snapshot) }
       <Result result={snapshot.result} />
 
       <Word word={snapshot.word} guesses={snapshot.guesses} />
